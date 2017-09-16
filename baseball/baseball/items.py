@@ -9,6 +9,8 @@ from scrapy import Item, Field
 
 
 class BatterItem(Item):
+    year = Field()
+    team = Field()
     name = Field()
     games = Field()
     pa = Field()
