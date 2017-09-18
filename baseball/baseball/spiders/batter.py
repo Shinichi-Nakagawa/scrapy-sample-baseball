@@ -12,15 +12,25 @@ class BatterSpider(scrapy.Spider):
     URL_TEMPLATE = 'http://npb.jp/bis/{year}/stats/idb{league}_{team}.html'
 
     def __init__(self, year=2017, league=LEAGUE_TOP):
-        self.year = year
-        self.start_urls = self._get_start_urls(year, league)
+        """
 
-    def _get_start_urls(self, year, league):
-        return [self.URL_TEMPLATE.format(year=year, league=league, team=t) for t in TEAMS]
+        :param year: シーズン年
+        :param league: 1 or 2(1軍もしくは2軍)
+        """
+        self.year = year
+        # URLリスト(12球団)
+        self.start_urls = [self.URL_TEMPLATE.format(year=year, league=league, team=t) for t in TEAMS]
 
     def parse(self, response):
+        """
+        選手一人分の打撃成績
+        :param response: 取得した結果(Response)
+        :return: 打撃成績
+        """
         for tr in response.xpath('//*[@id="stdivmaintbl"]/table').xpath('tr'):
             item = BatterItem()
+            if not tr.xpath('td[2]/text()').extract_first():
+                continue
             item['year'] = self.year
             item['team'] = Util.get_team(response.url)
             item['name'] = Util.get_text(tr.xpath('td[2]/text()').extract_first())
