@@ -1,9 +1,13 @@
-# This package will contain the spiders of your Scrapy project
-#
-# Please refer to the documentation for information on how to create and manage
-# your spiders.
+# 打撃・投球で共通して使う定義
 LEAGUE_TOP = 1  # 一軍
 LEAGUE_MINOR = 2  # 二軍
+
+THROW_RIGHT = 'R'   # 右投げ
+THROW_LEFT = 'L'    # 左投げ
+
+BAT_RIGHT = 'R'   # 右打ち
+BAT_LEFT = 'L'    # 左打ち
+BAT_SWITCH = 'T'    # 両打ち
 
 TEAMS = {
     'f': 'fighters',
@@ -33,7 +37,7 @@ class BaseballSpidersUtil:
     @classmethod
     def get_text(cls, text):
         """
-        get text for selector
+        テキスト取得(ゴミは取り除く)
         :param text: text
         :return: str
         """
@@ -44,7 +48,7 @@ class BaseballSpidersUtil:
     @classmethod
     def text2digit(cls, text, digit_type=int):
         """
-        get int/float for
+        数値にキャストする(例外時はゼロを返す)
         :param text: text
         :param digit_type: digit type(default:int)
         :return: str
@@ -54,4 +58,5 @@ class BaseballSpidersUtil:
         try:
             return digit_type(text)
         except ValueError as e:
+            print("変換に失敗しているよ:{}".format(e))
             return digit_type(0)

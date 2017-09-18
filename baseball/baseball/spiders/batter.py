@@ -2,7 +2,7 @@
 import scrapy
 
 from baseball.items import BatterItem
-from baseball.spiders import TEAMS, LEAGUE_TOP
+from baseball.spiders import TEAMS, LEAGUE_TOP, BAT_RIGHT, BAT_LEFT, BAT_SWITCH
 from baseball.spiders import BaseballSpidersUtil as Util
 
 
@@ -13,7 +13,7 @@ class BatterSpider(scrapy.Spider):
 
     def __init__(self, year=2017, league=LEAGUE_TOP):
         """
-
+        初期処理(年度とURLの設定)
         :param year: シーズン年
         :param league: 1 or 2(1軍もしくは2軍)
         """
@@ -33,6 +33,7 @@ class BatterSpider(scrapy.Spider):
                 continue
             item['year'] = self.year
             item['team'] = Util.get_team(response.url)
+            item['bat'] = self._get_bat(Util.get_text(tr.xpath('td[1]/text()').extract_first()))
             item['name'] = Util.get_text(tr.xpath('td[2]/text()').extract_first())
             item['games'] = Util.text2digit(tr.xpath('td[3]/text()').extract_first(), digit_type=int)
             item['pa'] = Util.text2digit(tr.xpath('td[4]/text()').extract_first(), digit_type=int)
@@ -57,3 +58,15 @@ class BatterSpider(scrapy.Spider):
             item['slg'] = Util.text2digit(tr.xpath('td[23]/text()').extract_first(), digit_type=float)
             item['obp'] = Util.text2digit(tr.xpath('td[24]/text()').extract_first(), digit_type=float)
             yield item
+
+    def _get_bat(self, text):
+        """
+        右打ち or 左打ち or 両打ち
+        :param text: テキスト
+        :return: 右打ち or 左打ち or 両打ち
+        """
+        if text == '*':
+            return BAT_LEFT
+        elif text == '+':
+            return BAT_SWITCH
+        return BAT_RIGHT
