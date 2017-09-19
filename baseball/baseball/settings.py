@@ -22,7 +22,7 @@ NEWSPIDER_MODULE = 'baseball.spiders'
 ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 2
 
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
@@ -30,7 +30,7 @@ ROBOTSTXT_OBEY = True
 DOWNLOAD_DELAY = 60
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 2
-CONCURRENT_REQUESTS_PER_IP = 2
+CONCURRENT_REQUESTS_PER_IP = 0
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
